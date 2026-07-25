@@ -1,9 +1,12 @@
 import parse from "./interpreter/parser"
-import walk from "./interpreter/interpreter"
+import walk from "./interpreter/walk"
 function App() {
-    const ast = parse(`let a = 24 `)
+    const ast = parse(`let a = 24 
+        function foo(){
+        console.log(a)}`)
         console.log(JSON.stringify(ast))
-        walk(ast)   
+        walk(ast) 
+          
     return(
         <>
     <h1>this is eventloop simulator</h1>

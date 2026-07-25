@@ -1,20 +1,22 @@
-function walk(node){
-    if(node === null ||typeof node !== "object") return ;
-
-    //tell about the AST node
-    if(node.type){
-        console.log(node)
+export function createScope(parent){
+    return {
+        vars:{},
+     parent
     }
-     
-    if(Array.isArray(node)){
-        for(let i = 0; i<node.length;i++){
-            walk(node[i]);
-        }
+    
+}
+export function define(scope, name, value) {
+scope.vars[name] = value;
+}
+export function lookup(scope, name){
+    if(name in scope.vars){
+      return scope.vars[name];
     }
-
-    else if(typeof(node) == "object"){
-        const values = Object.entries(node)
-        values.forEach(([key, value]) =>  walk(value))
+    else if(scope.parent === null){
+       throw new console.error(`${name} is not defined`);
+       
+    }
+    else{
+        lookup(scope.parent, name)
     }
 }
-export default walk;
