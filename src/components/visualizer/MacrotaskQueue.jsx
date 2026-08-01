@@ -1,0 +1,6 @@
+// const task = {
+
+//     callback,
+//     delay,
+
+// }
