@@ -1,6 +1,12 @@
-import { createScope } from "./scope"
-import { define } from "./scope";
-import { lookup } from "./scope";
+import { createScope , define, lookup } from "./scope"
+
+export function interpreter(ast){
+ const globalScope = createScope(null)
+
+ evalStatement(ast, globalScope);
+
+}
+
  function  evalStatement(node, scope){
      switch(node.type){
         case "Program":
@@ -16,8 +22,17 @@ import { lookup } from "./scope";
                     define(scope,declaration.id.name, value);
 }
                 break;
-            case "return":
-                // evalExpression(node.id, scope);
+            // case "FunctionDeclaration":{
+            //        const name = node.id.name;
+            //        functionObject = {
+            //         params,
+            //         body,
+            //         scope
+            //        }
+            //  define(scope,name,functionObject)
+            // }
+            
+
                 
 
     }
@@ -53,17 +68,35 @@ import { lookup } from "./scope";
            if(node.operator === "**"){
             return left ** right;
            }
+           break
         }
+        case "CallExpression":{
+             if(node.callee.object.name === "console" && node.callee.property.name === "log"){
+                evalCall(node,scope)
+             }
 
-                  
+             
+            break;
+
+          
+            
+        }          
             
     }
 
  }
-export function interpreter(ast){
- const globalScope = createScope(null)
+ function evalCall(node, scope){
+    switch(node.type){
+        case "cosnole.log":
+       {
+              const value = []
+              
+              for(let i = 0; i<node.arguments.length;i++){
+                value.push(evalExpression(node.arguments[i],scope))
+              }
+               return  console.log(...value)
+            }
+    }
 
- evalStatement(ast, globalScope);
-
-}
+ }
 
