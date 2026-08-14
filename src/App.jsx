@@ -3,9 +3,9 @@ import parse from "./interpreter/parser"
 import walk from "./interpreter/walk"
 function App() {
     const ast = parse(`
-function foo(){
-console.log('hi')}
-foo();
+function foo(a, b){
+sum = a + b}
+foo(2,3);
     `)
         console.log(JSON.stringify(ast))
         walk(ast) 
