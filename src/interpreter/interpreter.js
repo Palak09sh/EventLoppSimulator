@@ -1,35 +1,46 @@
-import { createScope, define, lookup } from "./scope";
+import { createScope, define, lookup, assign } from "./scope";
 import { logEvent, popFrame, pushFrame } from "./traceEvent";
-
-
-//Entry point of the interpreter to evaluate the AST
+import { createMacroTask, macroTaskqueue } from "./macrotask";
+/**
+ * Entry point for the interpreter. Walks the AST and evaluates it in a
+ * fresh global scope
+ * @param {object} ast - The program node by the parser.
+ */
 export function interpreter(ast) {
-  //creates the global scope 
   const globalScope = createScope(null);
-  //stores all the execution events that will later be used by the visulaiser to show what happened during execution
-  const trace = []
+  //Execution events (calls, logs) collected for the visualiser to replay
+  const trace = [];
   evalStatement(ast, globalScope);
-
-
+  //Executes statements - things that don't produce a usable value
+  // (declarations, control flow, blocks).
   function evalStatement(node, scope) {
     switch (node.type) {
-      //a program is the root node of ast which contains all top-level statements and execute each statement one by one in the same scope.
       case "Program":
         for (let i = 0; i < node.body.length; i++) {
           evalStatement(node.body[i], scope);
         }
         break;
-      //handles variable declarations
+
       case "VariableDeclaration":
         for (let i = 0; i < node.declarations.length; i++) {
           const declaration = node.declarations[i];
-          //evaluate the value assigned to the variable.
+
           const value = evalExpression(declaration.init, scope);
-          //store the variable and its value in the current scope
+
           define(scope, declaration.id.name, value);
         }
         break;
-      //handles function declarations
+      case "BlockStatement":
+        for (let i = 0; i < node.body.length; i++) {
+          const statement = node.body[i];
+          const result = evalStatement(statement, scope);
+          if (statement.type === "ReturnStatement") {
+            return result;
+          }
+        }
+        return undefined;
+
+
       case "FunctionDeclaration": {
         //store a representation of function in the current scope instead of executing immediately
         const functionObject = {
@@ -37,32 +48,34 @@ export function interpreter(ast) {
           node,
           closure: scope,
         };
-        //stores the function using its name
+
         define(scope, node.id.name, functionObject);
         break;
       }
-      //handles return statements inside functions, evaluate the returned expressions and pass its value back
+      case "ExpressionStatement":
+        return evalExpression(node.expression, scope);
+
       case "ReturnStatement":
         return node.argument ? evalExpression(node.argument, scope) : undefined;
       default:
         throw new Error(`Unsupported Statement ${node.type}`);
     }
   }
-
+  // Evaluates expressions - things that produce a value.
   function evalExpression(node, scope) {
     switch (node.type) {
-      //handles primitve values
+
       case "Literal":
         return node.value;
-      //handles variable refrences
+
       case "Identifier":
         return lookup(scope, node.name);
-      //handles expressions
+
       case "BinaryExpression": {
-        //evaluate both sides of expression
+
         const left = evalExpression(node.left, scope);
         const right = evalExpression(node.right, scope);
-        //Apply the operator to the evaluated values
+
         switch (node.operator) {
           case "+":
             return left + right;
@@ -76,7 +89,12 @@ export function interpreter(ast) {
             throw new Error(`Unsupported operator ${node.operator}`);
         }
       }
-      //handles function calls
+      case "AssignmentExpression": {
+        const value = evalExpression(node.right, scope);
+        assign(scope, node.left.name, value);
+        return value;
+      }
+
       case "CallExpression":
         return evalCall(node, scope);
       //handles the function written as expressions:
@@ -84,7 +102,7 @@ export function interpreter(ast) {
       // the function is not executed here instead a function object is created to remember its scope.
       case "ArrowFunctionExpression":
       case "FunctionExpression":
-        return { isFunction: true, node, closure: scope }; //creating the representation of Javascript function
+        return { isFunction: true, node, closure: scope };
       default:
         throw new Error(`Unsupported Expression: ${node.type}`);
     }
@@ -92,7 +110,7 @@ export function interpreter(ast) {
 
   function evalCall(node, scope) {
     const values = [];
-    //evaluate every argument before calling the function 
+
     for (let i = 0; i < node.arguments.length; i++) {
       values.push(evalExpression(node.arguments[i], scope));
     }
@@ -102,29 +120,36 @@ export function interpreter(ast) {
       node.callee.object.name === "console" &&
       node.callee.property.name === "log"
     ) {
-      //create a log event for the visualiser
-      trace.push(logEvent(values.join(", ")))
+
+      trace.push(logEvent(values.join(", ")));
       return undefined;
     }
-    //find the user-defined function in the current scope
-    const fn = lookup(scope, node.callee.name)
-    //create a variable name for the function call. 
-    //Example: add(10,20)
+    //setTimeout is also a host function - schedule the callback as 
+    // macrotask instead of calling it immediately
+    if (node.callee.name === "setTimeout") {
+      const callback = evalExpression(node.arguments[0], scope);
+      const delay = evalExpression(node.arguments[1], scope);
+      const task = createMacroTask(callback, delay);
+      macroTaskqueue.enqueue(task);
+    }
+
+
+    const fn = lookup(scope, node.callee.name);
+
     const functionCall = `${node.callee.name}(${values.join(", ")})`;
-    //Record that new function call has created
-    trace.push(pushFrame(functionCall))
-    //create the fucntion scope for the particular function call
-    //function's closure becomes the parent scope
-    const callScope = createScope(fn.closure)
-    //bind each arguments to its corresponding parameter
+
+    trace.push(pushFrame(functionCall));
+    // The call's scope chains to the function's closure (where it // was defined), NOt to the caller's scope - this is what makes lexical 
+    // scoping works instead of dynamic scoping
+    const callScope = createScope(fn.closure);
+
     for (let i = 0; i < fn.node.params.length; i++) {
       define(callScope, fn.node.params[i].name, values[i]);
     }
-    //execute the function body using the new function scoope
-    const result = evalStatement(fn.node.body, callScope)
-    //Record that fucntion call has finished
-    trace.push(popFrame(functionCall))
-    return result;
 
+    const result = evalStatement(fn.node.body, callScope);
+
+    trace.push(popFrame(functionCall));
+    return result;
   }
 }
