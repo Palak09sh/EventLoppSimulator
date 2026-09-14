@@ -14,9 +14,8 @@ export function createQueue(compare) {
       //Re-sort on every insert so priority order is maintained
       // (e.g. macrotasks staying ordered by delay)
       if (compare) {
-        queue.sort(compare)
+        queue.sort(compare);
       }
-
     },
     // Remove and returns the front of the queue.
     dequeue() {

@@ -1,11 +1,13 @@
 import { createQueue } from "./queue";
-
+import { Microtaskenqueue, Microtaskdequeue} from "./traceEvent";
+import { trace } from './interpreter';
 // Microtask queue - plain FIFO, no compare function.
 // microtasks have no delay to sort by; they always run in the ordere queued.
 
 export const microTaskqueue = createQueue();
 export function enqueueMicrotask(task) {
   microTaskqueue.enqueue(task);
+  trace.push(Microtaskenqueue(task))
 }
 /**
  * Runs every microtask currently in the queue, including by NEW
@@ -22,6 +24,7 @@ export function enqueueMicrotask(task) {
 export function drainMicrotasks() {
   while (!microTaskqueue.isEmpty()) {
     const task = microTaskqueue.dequeue();
+    trace.push(Microtaskdequeue(task));
     task();
   }
 }

@@ -1,7 +1,23 @@
 import { createQueue } from "./queue";
+import { Macrotaskdequeue , Macrotaskenqueue} from "./traceEvent";
+import { trace } from "./interpreter";
 // Macrotask queue, kept sorted by delay so the task with the shortest
 // remaining delay runs first(mirrors how setTimeout scheduling works)
 export const macroTaskqueue = createQueue((a, b) => a.delay - b.delay);
+export function enqueue(task) {
+  macroTaskqueue.enqueue(task);
+  
+  trace.push(Macrotaskenqueue(task))
+}
+export function dequeueMacro() {
+  const task = macroTaskqueue.dequeue();
+  trace.push(Macrotaskdequeue(task))
+  return task;
+}
+export function isMacroQueueEmpty() {
+  return macroTaskqueue.isEmpty();
+}
+
 /**
  * Creates a macrotask - a deferreed callback with its associated delay.
  * @param {Fucntion} callback - The function to run when the task fries.
@@ -10,8 +26,8 @@ export const macroTaskqueue = createQueue((a, b) => a.delay - b.delay);
  */
 export function createMacroTask(callback, delay) {
   return {
-
     callback,
-    delay
+    delay,
+    label: "setTimeout callback"
   };
 }
