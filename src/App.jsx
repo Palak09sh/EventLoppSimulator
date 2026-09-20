@@ -7,6 +7,7 @@ import { MacroTaskQueue } from "./components/visualizer/MacrotaskQueue";
 import { ConsoleOutput } from "./components/visualizer/ConsoleOutput";
 import { PlayBackControls } from "./components/controls/PlaybackControls";
 import { CodeEditor } from "./components/editor/CodeEditor";
+import { CurrentEvent } from "./components/visualizer/CurrentEvent";
 
 function App() {
     const[trace,setTrace] = useState([]);
@@ -48,6 +49,7 @@ run(newTrace)
            <option value={2}>2x</option>
             
     </select>
+    <CurrentEvent event={currentEvent} />
         </>
 
        
