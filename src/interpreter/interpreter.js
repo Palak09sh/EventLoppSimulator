@@ -1,6 +1,6 @@
 import { createScope, define, lookup, assign } from "./scope";
 import { logEvent, popFrame, pushFrame } from "./traceEvent";
-import { createMacroTask, macroTaskqueue } from "./macrotask";
+import { createMacroTask, macroTaskqueue,enqueue } from "./macrotask";
 import { promiseObject } from "./promise";
 import { enqueueMicrotask, microTaskqueue } from "./microtask";
 /**
@@ -117,7 +117,6 @@ export function interpreter(ast) {
   }
   function evalCall(node, scope) {
     const values = [];
-
     for (let i = 0; i < node.arguments.length; i++) {
       values.push(evalExpression(node.arguments[i], scope));
     }
@@ -138,11 +137,16 @@ export function interpreter(ast) {
     //setTimeout is also a host function - schedule the callback as 
     // macrotask instead of calling it immediately
     if (node.callee.name === "setTimeout") {
+     
       const callback = evalExpression(node.arguments[0], scope);
+
       const delay = evalExpression(node.arguments[1], scope);
+      
       const task = createMacroTask(callback, delay);
-      macroTaskqueue.enqueue(task);
-      return undefined
+      
+      enqueue(task);
+      
+      return undefined;
     }
 
    if(node.callee.type === "MemberExpression" && node.callee.object.name === "Promise" && node.callee.property.name === "resolve"){

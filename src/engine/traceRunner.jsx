@@ -4,11 +4,15 @@ import { runEventLoop } from '../interpreter/eventloop';
 export function runCode(code){
     resetTrace()
     const ast = parse(code);
-    interpreter(ast);
-    runEventLoop(executeFunction);
     
 
-console.log("AST:", ast);
+    interpreter(ast);
+    
+    runEventLoop(executeFunction);
+   
+    
 
-    return trace;
+
+
+  return trace;
 }
