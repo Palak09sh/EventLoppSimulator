@@ -9,6 +9,7 @@ export function useTracePlayback(trace) {
     const intervalRef = useRef(null);
     const currentStepRef = useRef(0);
     const [currentEvent, setCurrentEvent] = useState(null);
+    const [playbackSpeed, setPlaybackSpeed] = useState(1)
 
     function step(traceToPlay = trace) {
         
@@ -67,6 +68,7 @@ export function useTracePlayback(trace) {
 
     }
     function run(traceToPlay = trace) {
+        const interval = 500/playbackSpeed
         if (!isRunning && currentStepRef.current < traceToPlay.length) {
             setRunning(true)
             intervalRef.current = setInterval(() => {
@@ -77,7 +79,7 @@ export function useTracePlayback(trace) {
 
                 }
 
-            }, 500)
+            }, interval)
         }
     }
     return {
@@ -91,6 +93,8 @@ export function useTracePlayback(trace) {
         run,
         pause,
         currentEvent,
+        playbackSpeed,
+        setPlaybackSpeed
 
 
     };

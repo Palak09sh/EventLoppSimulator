@@ -25,7 +25,7 @@ setTrace(newTrace)
 run(newTrace)
     }
         
-        const { currentStep , step , callStack,microtaskQueue, macrotaskQueue,consoleOutput,reset,run,currentEvent} = useTracePlayback(trace)
+        const { currentStep , step , callStack,microtaskQueue, macrotaskQueue,consoleOutput,reset,run,currentEvent,playbackSpeed,setPlaybackSpeed} = useTracePlayback(trace)
     return(
         <>
     <h1>this is eventloop simulator</h1>
@@ -39,7 +39,17 @@ run(newTrace)
     <PlayBackControls reset={reset} />
     <CodeEditor code={code} setCode={setCode} />
     <pre>{JSON.stringify(currentEvent,null,2)}</pre>
+    <select
+     value={playbackSpeed} 
+     onChange={(e) => setPlaybackSpeed(Number(e.target.value))}>
+        <option value={0.5}>0.5x</option>
+         <option value={1}>1x</option>
+          <option value={1.5}>1.5x</option>
+           <option value={2}>2x</option>
+            
+    </select>
         </>
+
        
     )
 }
