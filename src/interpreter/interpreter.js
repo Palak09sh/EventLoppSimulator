@@ -1,6 +1,6 @@
 import { createScope, define, lookup, assign } from "./scope";
 import { logEvent, popFrame, pushFrame } from "./traceEvent";
-import { createMacroTask, macroTaskqueue, enqueue } from "./macrotask";
+import { createMacroTask } from "./macrotask";
 import { promiseObject } from "./promise";
 import { enqueueMicrotask } from "./microtask";
 import { registerWebApi } from "./webAPI";
