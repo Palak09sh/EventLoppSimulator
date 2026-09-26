@@ -1,4 +1,4 @@
-export function ConsoleOutput({ output }) {
+export function ConsoleOutput({ output, error }) {
   return (
     <section className="console-panel">
       <div className="panel-header">
@@ -7,7 +7,14 @@ export function ConsoleOutput({ output }) {
       </div>
 
       <div className="console-output">
-        {output.length === 0 ? (
+        <div className="console-output">
+        {error && (
+          <div className="console-error">
+            <span className="console-error-prompt">✕</span>
+            <span>{error}</span>
+          </div>
+        )}
+               {output.length === 0 && !error ?  (
           <div className="empty-state">
             No output yet
           </div>
@@ -26,6 +33,7 @@ export function ConsoleOutput({ output }) {
           ))
         )}
       </div>
+        </div>
     </section>
   );
 }

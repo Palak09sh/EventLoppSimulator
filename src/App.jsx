@@ -13,11 +13,16 @@ import { ExampleSelector } from "./components/controls/ExampleSelector";
 import "./index.css";
 
 function App() {
-  function handleExampleSelect(exampleCode) {
+  const [code, setCode] = useState(`console.log("Hello");`);
+  const [trace, setTrace] = useState([]);
+  const [error, setError] = useState(null);
+  
+function handleExampleSelect(exampleCode) {
     pause();
     reset();
     setTrace([]);
     setCode(exampleCode);
+    setError(null);
   }
   function generateTrace() {
     pause();
@@ -28,9 +33,20 @@ function App() {
       setTrace(newTrace);
       return newTrace;
     } catch (error) {
-      console.error(error);
+      setError(error.message);
+      setTrace([]);
       return [];
     }
+  }
+  function handleStep() {
+    if(trace.length === 0){
+      const newTrace = generateTrace();
+      if(newTrace.length > 0) {
+        step(newTrace);
+      }
+      return; 
+    }
+    step(trace)
   }
   function handleAutoRun() {
     const newTrace = generateTrace();
@@ -39,10 +55,11 @@ function App() {
       run(newTrace);
     }
   }
-
-  const [code, setCode] = useState(`console.log("Hello");`);
-  const [trace, setTrace] = useState([]);
-
+  function handleReset() {
+    reset();
+    setError(null);
+  }
+  
   const {
     currentEvent,
     callStack,
@@ -61,20 +78,6 @@ function App() {
     resume,
 
   } = useTracePlayback(trace);
-
-  function handleRunCode() {
-    pause();
-    reset();
-
-    try {
-      const newTrace = runCode(code);
-
-      setTrace(newTrace);
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <main className="app">
@@ -116,7 +119,7 @@ function App() {
 
           <button
             className="header-icon-button"
-            onClick={reset}
+            onClick={handleReset}
             title="Reset"
           >
             <span>↻</span>
@@ -162,7 +165,7 @@ function App() {
             <div className="playback-buttons">
 
               <PlayBackControls
-                step={() => step(trace)}
+                step={handleStep}
                 autoRun={() => handleAutoRun()}
                 resume={() => resume(trace)}
                 pause={pause}
@@ -209,6 +212,7 @@ function App() {
 
             <ConsoleOutput
               output={consoleOutput}
+              error={error}
             />
 
           </div>

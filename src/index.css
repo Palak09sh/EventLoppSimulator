@@ -622,6 +622,29 @@ textarea {
   font-size: 16px;
 }
 
+.console-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  padding: 10px 12px;
+  margin-bottom: 8px;
+
+  border: 1px solid #5a2d32;
+  border-radius: 6px;
+
+  background: #211518;
+  color: #e58b91;
+
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.console-error-prompt {
+  flex-shrink: 0;
+  font-weight: 700;
+}
 /* GENERAL RUNTI TYPOGRAPHY */
 
 .stack-item,
