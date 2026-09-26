@@ -1,14 +1,14 @@
-export function CallStack({ stack }){
-    return (
-        <div>
-            <h2>CallStack</h2>
-            <div>
-                {stack.map((frame, index )=> (
-                   <div key = {index}> {frame} </div>
-                ))}
-            </div>
+export function CallStack({ stack }) {
+  return (
+    <div className="runtime-list">
+      {stack.map((frame, index) => (
+        <div
+          className="runtime-item callstack-item"
+          key={index}
+        >
+          {frame}
         </div>
-    )
-
-    
+      ))}
+    </div>
+  );
 }

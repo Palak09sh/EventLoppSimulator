@@ -1,12 +1,14 @@
-export function MacroTaskQueue({queue}) {
-    return (
-        <div>
-            <h2>MacroTask</h2>
-            <div>
-                {queue.map((task, index )=> (
-                   <div key = {index}> {task.label} </div>
-                ))}
-            </div>
+export function MacroTaskQueue({ queue }) {
+  return (
+    <div className="runtime-list">
+      {queue.map((task, index) => (
+        <div
+          className="runtime-item macrotask-item"
+          key={index}
+        >
+          {typeof task === "string" ? task : task.label}
         </div>
-    )
+      ))}
+    </div>
+  );
 }

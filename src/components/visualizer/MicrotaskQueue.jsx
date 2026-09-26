@@ -1,12 +1,14 @@
-export function MicroTaskQueue({queue}) {
-    return (
-        <div>
-            <h2>MicroTask</h2>
-            <div>
-                {queue.map((task, index )=> (
-                   <div key = {index}> {task} </div>
-                ))}
-            </div>
+export function MicroTaskQueue({ queue }) {
+  return (
+    <div className="runtime-list">
+      {queue.map((task, index) => (
+        <div
+          className="runtime-item microtask-item"
+          key={index}
+        >
+          {typeof task === "string" ? task : task.label}
         </div>
-    )
+      ))}
+    </div>
+  );
 }

@@ -39,3 +39,18 @@ export function Macrotaskdequeue(task){
   };
 }
 
+export function webApiEnqueueEvent(task) {
+  return {
+    type: "webapi-enqueue",
+    task,
+    label: task.label,
+  };
+}
+
+export function webApiCompleteEvent(task) {
+  return {
+    type: "webapi-complete",
+    task,
+    label: task.label,
+  };
+}

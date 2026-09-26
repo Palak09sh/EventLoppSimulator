@@ -1,10 +1,37 @@
+export function PlayBackControls({
+  step,
+  autoRun,
+  resume,
+  pause,
+  isRunning,
+  isPaused,
+}) {
+  return (
+    <div className="playback-buttons">
+      <button onClick={step}>
+        Step
+      </button>
 
-export function PlayBackControls({ reset,run, pause }){
-    return(
-        <div>
-            <button onClick={reset}>Reset</button>
-            <button onClick={run}>Reset</button>
-            <button onClick={pause}>Reset</button>
-        </div>
-    )
+      <button
+        onClick={autoRun}
+        disabled={isRunning}
+      >
+        Auto Run
+      </button>
+
+      <button
+        onClick={resume}
+        disabled={!isPaused}
+      >
+        Resume
+      </button>
+
+      <button
+        onClick={pause}
+        disabled={!isRunning}
+      >
+        Pause
+      </button>
+    </div>
+  );
 }
