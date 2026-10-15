@@ -23,11 +23,11 @@ https://github.com/user-attachments/assets/48903eaf-c530-4834-9b2f-cd66c851b817
 
 ## Tech Stack
 
-- JavaScript
-- React
-- Acorn
-- CSS
-- Vite
+- **JavaScript(ES6+) - Interpreter and runtime simulation
+- **React** - Interactive user Interface
+- **Acorn** - Converts code into an abstract syntax tree
+- **CSS** - Styling and runtime visualization
+- **Vite** - Styling and runtime visualzation
 
 ## How It Works
 
@@ -110,7 +110,7 @@ Building this project helped me understand AST interpretation, function executio
 
 
 
-Built to make JavaScript runtime concepts easier to understand, one execution execution step at a time.
+**Built to make JavaScript runtime concepts easier to understand, one execution execution step at a time.**
 
 
 
