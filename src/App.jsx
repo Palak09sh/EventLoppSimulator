@@ -90,8 +90,8 @@ function handleExampleSelect(exampleCode) {
           </div>
 
           <div>
-            <h1>Event Loop Visualizer</h1>
-            <p>A Visual Playground for the JavaScript Runtime</p>
+            <h1>Event Loop Simulator</h1>
+            <p>An Interactive JavaScript Runtime Simulator</p>
           </div>
         </div>
 

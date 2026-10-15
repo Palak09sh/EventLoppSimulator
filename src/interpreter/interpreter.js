@@ -76,8 +76,6 @@ function evalExpression(node, scope) {
       return node.value;
 
     case "Identifier":
-      console.log("IDENTIFIER NODE:", node);
-      console.log("IDENTIFIER NAME:", node.name);
       return lookup(scope, node.name);
 
     case "BinaryExpression": {
@@ -128,8 +126,6 @@ function evalCall(node, scope) {
     node.callee.property.name === "log"
   ) {
 
-    console.log("VALUES:", values);
-    console.log("EVENT:", logEvent(values.join(", ")));
     trace.push(logEvent(values.join(", ")));
     return undefined;
 
