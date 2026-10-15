@@ -1,10 +1,14 @@
-# EventloopSimulator
+# EventLoopSimulator
+*A Visual Playground for the JavaScript Runtime*
 
-I built EventLoopSimulator to explore the JavaScript runtime beyond writing the regular code. It uses a custom AST interpreter that I implemented to execute a supported subset of JavaScript and generate traces that can be visualized step by step.
+I built EventLoopSimulator to understand how JavaScript works under the hood. It uses a custom AST interpreter that I implemented to execute a supported subset of JavaScript and generate traces of its execution
 
 Instead of just reading about the event loop, you can write code and watch its execution step by step.
+## Preview
 
-# Features
+<img width="400" height="186" alt="gif" src="https://github.com/user-attachments/assets/f226a13c-d4d4-4537-af3e-ef31a93cfbe9" />
+
+## Features
 
 - **Custom AST Interpreter** - Parses and evaluates supported JavaScript syntax.
 - **Runtime Visualization** - Visualizes the call stack, Web APIs, microtask queue, and macrotask queue.
@@ -13,7 +17,7 @@ Instead of just reading about the event loop, you can write code and watch its e
 - **Console & Error Handling** - View program output and supported execution errors.
 - **Code Examples** - Experiment with synchronous code, Promises, and setTimeout.
 
-# Tech Stack
+## Tech Stack
 
 - JavaScript
 - React
@@ -21,16 +25,15 @@ Instead of just reading about the event loop, you can write code and watch its e
 - CSS
 - Vite
 
-  # Getting Started
+## How It Works
 
-  Clone the repository and install the dependencies
-
-  ```
-  npm install
-  npm run dev
-  ```
-
-  # Supported JavaScript
+- **Parsing** — JavaScript source code is converted into an Abstract Syntax Tree (AST).
+- **Interpretation** — The custom interpreter evaluates supported statements and expressions.
+- **Trace Generation** — Execution events are recorded, including function calls, returns, console logs, and queue operations.
+- **Event Loop Simulation** — The simulator processes macrotasks and drains the microtask queue after each macrotask.
+- **Trace Playback** — The React frontend replays the trace and updates the runtime visualization.
+  
+## Supported JavaScript
   The interpreter supports a subset of JavaScript features, including:
 
   - Variable Declarations
@@ -45,7 +48,9 @@ Instead of just reading about the event loop, you can write code and watch its e
   - Promise.resolve().then()
   - Arrow functions and function expression
 
-# Project Structure
+
+
+## Project Structure
 ```
 src/
 ├── components/
@@ -84,11 +89,19 @@ src/
 ├── App.jsx
 └── index.css
 ```
+## Getting Started
 
-  # What I learned
+  Clone the repository and install the dependencies
+
+  ```
+  npm install
+  npm run dev
+  ```
+
+## What I learned
 
 Building this project helped me understand AST interpretation, function execution, lexical scopes, execution tracing and how the event loop coordinates asynchronous tasks.
 
-**NOTE** : EventloopSimulator is an educational project that implements a simplified JavaScript runtime, not a complete JavaScript engine.
+**NOTE:**  EventloopSimulator is an educational project that implements a simplified JavaScript runtime, not a complete JavaScript engine.
 
 
