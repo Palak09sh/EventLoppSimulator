@@ -6,7 +6,11 @@ I built EventLoopSimulator to understand how JavaScript works under the hood. It
 Instead of just reading about the event loop, you can write code and watch its execution step by step.
 ## Preview
 
-<img width="400" height="186" alt="gif" src="https://github.com/user-attachments/assets/f226a13c-d4d4-4537-af3e-ef31a93cfbe9" />
+
+https://github.com/user-attachments/assets/48903eaf-c530-4834-9b2f-cd66c851b817
+
+
+
 
 ## Features
 
@@ -94,6 +98,8 @@ src/
   Clone the repository and install the dependencies
 
   ```
+  git clone "https://github.com/Palak09sh/EventLoppSimulator.git"
+  cd eventloop-simulator
   npm install
   npm run dev
   ```
@@ -102,6 +108,9 @@ src/
 
 Building this project helped me understand AST interpretation, function execution, lexical scopes, execution tracing and how the event loop coordinates asynchronous tasks.
 
-**NOTE:**  EventloopSimulator is an educational project that implements a simplified JavaScript runtime, not a complete JavaScript engine.
+
+
+Built to make JavaScript runtime concepts easier to understand, one execution execution step at a time.
+
 
 
